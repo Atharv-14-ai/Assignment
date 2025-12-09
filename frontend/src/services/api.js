@@ -6,7 +6,7 @@ import axios from 'axios';
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
   (import.meta.env.MODE === 'production'
-    ? 'https://truestate-backend.onrender.com/api'   // Render backend
+    ? 'https://truestate-backend-kwpj.onrender.com/api'   // Render backend 
     : 'http://localhost:5000/api');                 // Local dev
 
 console.log("🌐 Using API Base URL:", API_BASE_URL);
