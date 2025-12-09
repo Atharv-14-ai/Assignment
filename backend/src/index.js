@@ -7,14 +7,29 @@ const salesRoutes = require('./routes/salesRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5173'],
+// ----------------------
+// 🚀 UPDATED CORS SETUP
+// ----------------------
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production'
+    ? [
+        'https://truestate-frontend.onrender.com',  // Your deployed frontend
+        'http://localhost:5173'                     // For dev testing
+      ]
+    : [
+        'http://localhost:3000',
+        'http://localhost:5173'
+      ],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
+// ----------------------
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Request logging
 app.use((req, res, next) => {
   const timestamp = new Date().toISOString();
   console.log(`[${timestamp}] ${req.method} ${req.url}`);
@@ -23,6 +38,7 @@ app.use((req, res, next) => {
 
 app.use('/api/sales', salesRoutes);
 
+// API Root
 app.get('/', (req, res) => {
   res.json({
     message: 'TruEstate Retail Sales Management API',
@@ -38,6 +54,7 @@ app.get('/', (req, res) => {
   });
 });
 
+// 404 Handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -46,12 +63,15 @@ app.use((req, res) => {
   });
 });
 
+// Error Handler
 app.use((err, req, res, next) => {
   console.error('Server Error:', err);
   res.status(500).json({
     success: false,
     error: 'Internal Server Error',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+    message: process.env.NODE_ENV === 'development'
+      ? err.message
+      : 'Something went wrong'
   });
 });
 
