@@ -1,25 +1,24 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
+// 1. For Render/Railway → They provide DATABASE_URL automatically
+// 2. For Local → fallback to manual credentials
+const connectionString =
+  process.env.DATABASE_URL ||
+  `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+
 const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionString,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }  // Render/Railway require SSL
+      : false,
 });
 
-pool.connect((err, client, release) => {
-  if (err) {
-    console.error('Error connecting to PostgreSQL:', err);
-  } else {
-    console.log('✅ Connected to PostgreSQL database');
-    release();
-  }
-});
+// Test connection
+pool.connect()
+  .then(() => console.log("✅ PostgreSQL connected successfully"))
+  .catch(err => console.error("❌ PostgreSQL connection error:", err));
 
 module.exports = {
   query: (text, params) => pool.query(text, params),
