@@ -1,111 +1,88 @@
-import axios from 'axios';
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
 
-// ------------------------------
-// 🔥 Smart BASE URL handling
-// ------------------------------
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL ||
-  (import.meta.env.MODE === 'production'
-    ? 'https://truestate-backend-kwpj.onrender.com/api'   // Render backend 
-    : 'http://localhost:5000/api');                 // Local dev
+const salesRoutes = require('./routes/salesRoutes');
 
-console.log("🌐 Using API Base URL:", API_BASE_URL);
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-// ------------------------------
-// 🔥 Axios Instance
-// ------------------------------
-const API = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 500000000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: true,
+// ----------------------
+// 🚀 UPDATED CORS SETUP
+// ----------------------
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production'
+    ? [
+        'https://truestate-frontend.onrender.com',  // Your deployed frontend
+        'http://localhost:5173'                     // For dev testing
+      ]
+    : [
+        'http://localhost:3000',
+        'http://localhost:5173'
+      ],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+// ----------------------
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Request logging
+app.use((req, res, next) => {
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ${req.method} ${req.url}`);
+  next();
 });
 
-// ------------------------------
-// 🔥 Caching Support (same logic)
-// ------------------------------
-const cache = new Map();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+app.use('/api/sales', salesRoutes);
 
-export const getSales = async (params = {}, options = {}) => {
-  try {
-    const cacheKey = JSON.stringify(params);
-    const cached = cache.get(cacheKey);
+// API Root
+app.get('/', (req, res) => {
+  res.json({
+    message: 'TruEstate Retail Sales Management API',
+    version: '1.0.0',
+    endpoints: {
+      sales: '/api/sales',
+      filters: '/api/sales/filters',
+      stats: '/api/sales/stats',
+      sample: '/api/sales/sample',
+      health: '/api/sales/health'
+    },
+    documentation: 'See README for API documentation'
+  });
+});
 
-    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-      return cached.data;
-    }
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    error: 'Endpoint not found',
+    message: `The requested endpoint ${req.method} ${req.url} does not exist`
+  });
+});
 
-    const cleanParams = {};
-    Object.keys(params).forEach(key => {
-      if (params[key] !== '' && params[key] !== null && params[key] !== undefined) {
-        if (Array.isArray(params[key]) && params[key].length > 0) {
-          cleanParams[key] = params[key].join(',');
-        } else if (!Array.isArray(params[key])) {
-          cleanParams[key] = params[key];
-        }
-      }
-    });
+// Error Handler
+app.use((err, req, res, next) => {
+  console.error('Server Error:', err);
+  res.status(500).json({
+    success: false,
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'development'
+      ? err.message
+      : 'Something went wrong'
+  });
+});
 
-    const response = await API.get('/sales', {
-      params: cleanParams,
-      ...options
-    });
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📊 API Base URL: http://localhost:${PORT}/api`);
+  console.log(`✅ Health Check: http://localhost:${PORT}/api/sales/health`);
+  console.log(`🔗 Environment: ${process.env.NODE_ENV || 'development'}`);
+});
 
-    cache.set(cacheKey, {
-      data: response.data,
-      timestamp: Date.now()
-    });
-
-    if (cache.size > 50) {
-      const firstKey = cache.keys().next().value;
-      cache.delete(firstKey);
-    }
-
-    return response.data;
-  } catch (error) {
-    console.error('API Error:', error);
-    throw error;
-  }
-};
-
-
-export const getFilters = async () => {
-  try {
-    const cacheKey = 'filters';
-    const cached = cache.get(cacheKey);
-
-    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-      return cached.data;
-    }
-
-    const response = await API.get('/sales/filters');
-
-    cache.set(cacheKey, {
-      data: response.data,
-      timestamp: Date.now()
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('API: Error fetching filters:', error);
-
-    return {
-      regions: ['North', 'South', 'East', 'West', 'Central'],
-      genders: ['Male', 'Female'],
-      categories: ['Electronics', 'Beauty', 'Fashion', 'Home'],
-      paymentMethods: ['Credit Card', 'Debit Card', 'UPI', 'Cash', 'Net Banking'],
-      tags: ['organic', 'smart', 'wireless', 'portable']
-    };
-  }
-};
-
-export const clearCache = () => cache.clear();
-
-export default {
-  getSales,
-  getFilters,
-  clearCache
-};
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received. Shutting down gracefully...');
+  process.exit(0);
+});
