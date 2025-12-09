@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
     ? [
-        'https://truestate-frontend.onrender.com',  // Your deployed frontend
+        'https://truestate-frontend-3djo.onrender.com',  // Your deployed frontend  
         'http://localhost:5173'                     // For dev testing
       ]
     : [
@@ -86,3 +86,4 @@ process.on('SIGTERM', () => {
   console.log('SIGTERM received. Shutting down gracefully...');
   process.exit(0);
 });
+
