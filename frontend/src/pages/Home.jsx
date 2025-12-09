@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import MainLayout from '../components/Layout/MainLayout';
 import SalesTable from '../components/SalesTable';
 import PaginationControls from '../components/Pagination/PaginationControls';
-import SortDropdown from '../components/Sort/SortDropdown';
+import SortDropdown from '../components/Sort/SortDropDown';
 import EmptyState from '../components/UI/EmptyState';
 import FilterSection from '../components/FilterPanel/FilterSection';
 import RangeFilter from '../components/FilterPanel/RangeFilter';
