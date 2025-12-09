@@ -1,0 +1,142 @@
+/* Sidebar Container */
+.sidebar {
+  width: 250px; /* Adjust width as needed */
+  height: 100vh;
+  background-color: #ffffff; /* White background */
+  padding: 0;
+  color: #333;
+  font-family: Arial, sans-serif;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Vault Header */
+.sidebar-vault-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee; /* Subtle separator */
+  cursor: pointer;
+}
+
+.vault-logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.vault-logo {
+  /* This is a placeholder for your actual Vault logo */
+  width: 30px;
+  height: 30px;
+  background-color: #5551ff; /* Dark blue/purple color */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.vault-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.vault-name {
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.user-name {
+  font-size: 12px;
+  color: #666;
+  line-height: 1;
+}
+
+/* Main Navigation */
+.sidebar-nav {
+  padding: 0 10px;
+}
+
+/* Single Menu Item (Dashboard, Nexus, Intake) */
+.sidebar-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 10px;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #444;
+  cursor: pointer;
+}
+
+.sidebar-menu-item span {
+  margin-left: 10px;
+}
+
+.sidebar-menu-item:hover {
+  /* Optional: Hover effect */
+  background-color: #f0f0f0; 
+  border-radius: 4px;
+}
+
+/* Group Header (Services, Invoices) */
+.sidebar-group {
+  margin-bottom: 15px;
+  border-radius: 4px;
+  overflow: hidden; /* Contains children border */
+}
+
+.sidebar-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 10px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #444;
+  cursor: pointer;
+}
+
+.sidebar-group-header .sidebar-menu-item-content {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-group-header span {
+  margin-left: 10px;
+}
+
+/* Nested Children */
+.sidebar-group-children {
+  padding: 5px 0 5px 25px; /* Indentation */
+  border-top: 1px solid #eee;
+}
+
+.sidebar-child-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+}
+
+.sidebar-child-item span {
+  margin-left: 10px;
+}
+
+.sidebar-child-item:hover {
+  /* Optional: Hover effect for children */
+  background-color: #fafafa;
+  border-radius: 4px;
+}
+
+/* Bold Text for 'Proforma Invoices' */
+.bold-text {
+  font-weight: bold;
+  color: #333; /* Darker color for emphasis */
+}

@@ -1,0 +1,32 @@
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.main-container {
+  flex: 1;
+  padding: 1.5rem;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+.dashboard-title {
+    /* Font & Size */
+    font-size: 1.8rem; /* Large and prominent */
+    font-weight: 700; /* Bold */
+    color: #1e293b; 
+    
+    /* Spacing */
+    margin-bottom: 0.75rem; 
+    margin-left: 0.5rem;
+    padding-left: 1.5rem; 
+    padding-top: 1.5rem; 
+}

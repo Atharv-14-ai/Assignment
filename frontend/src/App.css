@@ -1,0 +1,11 @@
+@import './assets/styles/globals.css';
+
+.App {
+  min-height: 100vh;
+}
+
+/* Global animations */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
