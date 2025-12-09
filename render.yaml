@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: truestate-backend
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    healthCheckPath: /api/sales/health
+    autoDeploy: true
+    # Add database credentials from Render PostgreSQL
